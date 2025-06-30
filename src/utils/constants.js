@@ -1,0 +1,1 @@
+export const CODEFORCES_BASE_URL = "https://codeforces.com/api/";
