@@ -10,4 +10,10 @@ router.get("/allStudents", async(req, resp) => {
         message: "Existing users fetched successfully!",
         body: req.allUsers
     });
-})
+});
+
+
+router.post("/postUser", )
+
+
+export default router;
