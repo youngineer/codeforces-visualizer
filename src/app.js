@@ -11,10 +11,13 @@ app.use(express.json());
 
 app.use("/", router)
 
-connectDb()
-  .then(() => {
-    app.listen(process.env.PORT);
+app.listen(process.env.PORT);
     console.log("Server listening on port", process.env.PORT);
-  }).catch((err) => {
-    console.error(err);
-  })
+
+// connectDb()
+//   .then(() => {
+//     app.listen(process.env.PORT);
+//     console.log("Server listening on port", process.env.PORT);
+//   }).catch((err) => {
+//     console.error(err);
+//   })
