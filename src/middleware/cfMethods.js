@@ -1,5 +1,6 @@
 import { getUserContestHistory, getUserInfo, getUserProblemSolvingData } from "../services/cfServices.js";
 import { CODEFORCES_BASE_URL } from "../utils/constants.js"
+import { saveToDb } from "./databaseMethods.js";
 
 
 export const handlePostNewUser = async(req, resp, next) => {
@@ -37,6 +38,8 @@ export const handlePostNewUser = async(req, resp, next) => {
             contestHistory: contestHistory,
             problemSolvedData: problemSolvedData
         }
+
+        const userStoredInDb = saveToDb(userDataToStoreInDb);
 
         req.content = userDataToStoreInDb;
         next();

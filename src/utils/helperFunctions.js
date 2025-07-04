@@ -13,67 +13,28 @@ export const calculateUnsolvedProblems = (contestProblems) => {
 };
 
 
-export const getDateFromTimestamp = (unixTimestamp, limit) => {
+export const getDateFromTimestamp = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
     const now = new Date();
-    let done7 = false;
-    let done30 = false;
-    let done90 = false;
 
     const timeDiff = now - date;
-    const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0'); 
+    const yyyy = date.getFullYear();
 
-    if (daysDiff > 7) done7 = true;
-    if (daysDiff > 30) done30 = true;
-
-    if (daysDiff <= limit) {
-        const dd = String(date.getDate()).padStart(2, '0');
-        const mm = String(date.getMonth() + 1).padStart(2, '0'); 
-        const yyyy = date.getFullYear();
-
-        return {
-            date: `${dd}/${mm}/${yyyy}`,
-            done7: done7,
-            done30: done30,
-            done90: done90
-        };
-    }
-
-    return ''; 
+    const dateString = `${dd}/${mm}/${yyyy}`;
+    return [daysDiff, dateString];
 };
 
 
-export const getPeriodAverages = (dailySubmissions, totalRating, totalProblemsSolved) => {
-    const calculateAvg = (submissions, totalRating, totalProblemsSolved, days) => {
-        const recentSubmissions = Object.entries(submissions).filter(([date]) => {
-            const dateObj = new Date(date);
-            const diff = (new Date() - dateObj) / (1000 * 60 * 60 * 24);
-            return diff <= days;
-        });
 
-        let totalProblemsForPeriod = 0;
-        let totalRatingForPeriod = 0;
-        recentSubmissions.forEach(([_, count]) => totalProblemsForPeriod += count);
+export const isEntryValid = (timestamp, limit) => {
+    const date = new Date(timestamp * 1000);
+    const today = new Date();
 
-        for (const [date, count] of recentSubmissions) {
-            totalRatingForPeriod += count * totalRating;
-        }
-
-        const avgProblemsPerDay = recentSubmissions.length === 0 ? 0 : Math.round((totalProblemsForPeriod / recentSubmissions.length), 2);
-        const avgRating = recentSubmissions.length === 0 || totalProblemsForPeriod === 0 ? 0 : Math.round((totalRatingForPeriod / totalProblemsForPeriod), 2);
-
-        return {
-            avgProblemsPerDay,
-            avgRating
-        };
-    };
-
-    return {
-        7: calculateAvg(dailySubmissions, totalRating, totalProblemsSolved, 7),
-        30: calculateAvg(dailySubmissions, totalRating, totalProblemsSolved, 30),
-        90: calculateAvg(dailySubmissions, totalRating, totalProblemsSolved, 90)
-    };
-};
+    return today - date <= limit;
+}
 
 
 
